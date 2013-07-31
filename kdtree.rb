@@ -10,12 +10,12 @@ class KDTree
     end
 
     points.qsort_by!(field)
-    median_index = (points.size / 2).to_i
+    median_index = (points.size / 2).to_i - 1
 
     self.data = points[median_index]
 
     self.left  = KDTree.new(points[0..median_index-1], fields, depth + 1) unless median_index < 1
-    self.right = KDTree.new(points[median_index+1..-1], fields, depth + 1) unless median_index+1 >= points.size
+    self.right = KDTree.new(points[median_index+1..-1], fields, depth + 1) unless median_index + 1 >= points.size
   end
 
   # Получение пользователей по диапазонам значений полей
