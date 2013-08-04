@@ -5,33 +5,34 @@ K = 39
 N = 100
 
 def search(a, e)
-  li, ri = 0, (a.size - 1)
-  real_i = nil
-  iterations_count = 0
+  l, r = 0, (a.size - 1)
+  is_ordered = false
+  iteration_count = 0
 
   loop do
-    iterations_count += 1
+    iteration_count += 1
+    m = ((l + r) / 2).to_i
+    return [m, iteration_count] if a[m] == e
+    return [l, iteration_count] if a[l] == e
 
-    i = ((li + ri) / 2).to_i
-    real_i = (i - K) % N
-
-    if e < a[real_i]
-      ri = i - 1
-    elsif e > a[real_i]
-      li = i + 1
-    else
-      break
+    if is_ordered || a[l] > a[m]  # упорядочена правая часть
+      if is_ordered = e > a[m] && (is_ordered || e < a[l])
+        l = m + 1                 # ищем справа
+      else
+        r = m - 1
+      end
+    else                          # упорядочена левая часть
+      if is_ordered = e < a[m] && (is_ordered || e > a[l])
+        r = m - 1                 # ищем слева
+      else
+        l = m + 1
+      end
     end
 
-    if li > ri
-      real_i = nil
-      break
+    if l > r
+      return [nil, iteration_count]
     end
   end
-
-  puts "Количество сравнений: #{Fixnum.comparsions_count}"
-  puts "Количество итераций: #{iterations_count}"
-  real_i
 end
 
 a = Array.new(N) {|i| i * 2 }.rotate(K)
@@ -40,5 +41,7 @@ puts "Исходный массив: #{a}"
 puts "Введите искомый элемент"
 e = STDIN.gets.to_i
 
-index = search(a, e)
+index, iteration_count = search(a, e)
 puts index ? "Индекс элемента: #{index}" : "Элемент не найден"
+puts "Количество итераций #{iteration_count}"
+puts "Количество сравнений: #{Fixnum.comparsions_count}"
