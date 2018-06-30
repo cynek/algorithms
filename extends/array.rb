@@ -23,4 +23,30 @@ class Array
     qsort_by!(field, i, r) if i < r
     self
   end
+
+  def qsort!(l = 0, h = self.size - 1)
+    if h > l
+      p = partition(l,h)
+      qsort!(l, p - 1)
+      qsort!(h, p + 1)
+    end
+    self
+  end
+  
+  private
+
+  def partition(l,h)
+    p = h
+    f = l
+    i, j = l, h
+    while i < h
+      if self[i] < self[p]
+        self[i], self[f] = self[f], self[i]
+        f += 1
+      end
+      i += 1
+    end
+    self[f], self[p] = self[p], self[f]
+    f
+  end
 end
